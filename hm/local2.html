@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>数据存储localstorage</title>
+		<script type="text/javascript" src="../js/jquery.min.js" ></script>
+		<script src="../js/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<label for="username">姓名：<input type="text" id="username" v-model="usermsg" placeholder="请输入姓名"/></label><br />
+			<label for="male"><input type="radio" name='sex' id="male" v-model='sexy' checked="true" value="男"/>男</label><br />
+			<label for="female"><input type="radio" id="female" name="sex" v-model="sexy" value="女"/>女</label><br />
+			<button v-on:click="save">保存数据</button>
+			<button v-on:click="get">获取数据</button>
+			<button v-on:click="clear">清除数据</button>
+			<button @click="remove('mysex')">清除性别数据</button>
+			<button @click="remove('name')">清除姓名数据</button>
+			<p>{{msg}}</p>
+		</div>
+	</body>
+	<script>
+		var myStorage = window.localStorage;
+		new Vue({
+			el: '#app',
+			data:{
+				msg:"",
+				usermsg:"",
+				sexy:"男"
+			},
+			methods:{
+				//保存数据
+				save: function(){
+					myStorage.setItem('name',this.usermsg);
+					myStorage.setItem('mysex',this.sexy);
+					
+					alert("保存数据成功");
+				},
+				//获取数据
+				get: function(){
+					this.msg=myStorage.getItem("name")+myStorage.getItem("mysex");
+					//也可以采用遍历数据的方式获取数据
+					/*for(var i = 0;i < myStorage.lenght;i++){
+						var key = myStorage.key(i);
+						var val = myStorage.getItem(key);
+					}*/
+					
+				},
+				//清空所有数据
+				clear: function(){
+					myStorage.clear();
+					myStorage.setItem('name',"");
+					myStorage.setItem('mysex',"");
+				},
+				//移除性别数据
+				remove:function(text){
+					myStorage.removeItem(text);
+					myStorage.setItem(text,"");
+				}
+			}
+		});
+	</script>
+</html>

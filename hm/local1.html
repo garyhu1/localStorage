@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>数据存储localstorage</title>
+		<!-- sessionStorage与localStorage差不多-->
+		<!-- 
+		主要区别是：
+		   localStorage没有过期时间，只要不clear或remove，数据会一直保存。
+           sessionStorage 针对一个session进行数据存储，生命周期与session相同，当用户关闭浏览器后，数据将被删除。
+		-->
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<div>
+			<label for="username">姓名：<input type="text" id="username" /></label><br />
+			<label for="male"><input type="radio" name='sex' id="male" value='男' checked="true"/>男</label><br />
+			<label for="female"><input type="radio" id="female" name="sex" value="女"/>女</label><br />
+			<button id="save">保存数据</button>
+			<button id="get">获取数据</button>
+			<button id="clear">清除数据</button>
+			<p id="showdata"></p>
+		</div>
+	</body>
+	<script>
+		var userName = $("#username");
+		var male = $("#male");
+		var female = $("#female");
+		var showData = $("#showdata");
+		var myStorage = window.localStorage;
+
+		//保存数据
+		$("#save").click(function() {
+			var myname = userName.val();
+			var mysex;
+			if(male.is(":checked")) {
+				mysex = male.val();
+			} else if(female.is(":checked")) {
+				mysex = female.val();
+			}
+			var data = {};
+			data.name = myname;
+			data.sex = mysex;
+			myStorage.setItem('data', JSON.stringify(data));
+		});
+		//获取数据
+		$("#get").click(function() {
+			showData.html("");
+			var localdata = JSON.parse(myStorage.getItem('data'));
+			showData.text(localdata.name + localdata.sex);
+			//			showData.append('<span>姓名：'+(myStorage.getItem('name') === null ?"":myStorage.getItem('name'))+'</span><br/>');
+			//			showData.append('<span>性别：'+(myStorage.getItem('sex')=== null ?"":myStorage.getItem('sex'))+'</span>');
+		});
+		//清除所有数据
+		$("#clear").click(function() {
+			if(myStorage) {
+				myStorage.clear();
+			}
+		});
+
+		//监听数据的改变
+		if(window.addEventListener) {
+			window.addEventListener("storage", handle_storage, false);
+		} else if(window.attachEvent) {
+			window.attachEvent("onstorage", handle_storage);
+		}
+
+		function handle_storage(e) {
+			if(!e) {
+				e = window.event;
+			}
+			alert("数据改变了");
+		}
+	</script>
+
+</html>
